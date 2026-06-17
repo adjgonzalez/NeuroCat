@@ -1,46 +1,68 @@
 # NeuroCat Lab Planner
 
-A small cat-themed lab planner for neuroscience study, deadlines, readings, and experiment checklists.
+NeuroCat Lab Planner is a lightweight Progressive Web App for organizing study and lab work. It combines practical planning tools with a small animated pixel-art cat scene.
 
-## Run on your computer
+## Features
+
+- To-do list with categories
+- Deadline tracker
+- Reading list
+- Experiment checklist
+- Local progress and mood meter
+- Animated lab cat with feeding and petting interactions
+- Selectable pixel-art scenes
+- Offline-capable PWA behavior through a service worker
+
+## Local Development
+
+Run a local static server from the project folder:
 
 ```powershell
 python -m http.server 5173
 ```
 
-Then open:
+Open:
 
 ```text
 http://localhost:5173
 ```
 
-## Run on an iPhone
+## GitHub Pages
 
-iPhones run native apps as iOS app bundles, usually distributed as `.ipa` files through the App Store, TestFlight, or direct developer tools.
+This project can be hosted directly with GitHub Pages because it is a static site.
 
-This project is a Progressive Web App instead. That means she can run it on an iPhone through Safari:
+Recommended Pages settings:
 
-1. Put the files online with GitHub Pages, Netlify, Vercel, or another static web host.
-2. Open the site in Safari on her iPhone.
-3. Tap Share.
-4. Tap Add to Home Screen.
+- Source: `Deploy from a branch`
+- Branch: `main`
+- Folder: `/ (root)`
 
-After that, NeuroCat opens from her Home Screen like a regular app and stores planner data on the phone.
+Once deployed, the site should be available at:
 
-## Native iPhone option
+```text
+https://adjgonzalez.github.io/NeuroCat/
+```
 
-If you want a true `.ipa` later, wrap this app with Capacitor or rebuild it in SwiftUI. The PWA version is the easiest first version because it does not need Xcode, an Apple Developer account, App Store review, or TestFlight.
+## iPhone Installation
 
-## Add More Cat Scenes
+On iPhone, open the deployed site in Safari:
 
-Scene choices live in two places:
+1. Tap Share.
+2. Tap Add to Home Screen.
+3. Open NeuroCat from the Home Screen.
+
+Planner data is stored locally in the browser on the device.
+
+## Adding Scenes
+
+To add another cat scene:
 
 1. Add an option in `index.html` inside `#sceneSelect`.
 2. Add the scene id to the `scenes` array in `app.js`.
 3. Add matching CSS using `.cat-panel[data-scene="your-id"]`.
 
-The current scenes are night park, city walk, and campus path.
+Current scenes:
 
-## Lab Cat Reactions
-
-The cat reacts to planner actions, feeding, and petting. A few pets in a row are fine, but repeated petting makes the cat annoyed and then angry.
+- Night park
+- City walk
+- Campus path
