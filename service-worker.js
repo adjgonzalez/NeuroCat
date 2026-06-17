@@ -1,4 +1,4 @@
-const CACHE_NAME = "neurocat-lab-planner-v22";
+const CACHE_NAME = "neurocat-lab-planner-v24";
 const FILES = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const FILES = [
   "./app.js",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./neurocat.png",
 ];
 
 self.addEventListener("install", (event) => {
