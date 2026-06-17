@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroCat Lab Planner</title>
+    <meta name="theme-color" content="#111316" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="NeuroCat" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="app-title">
+        <h1 id="app-title" class="sr-only">NeuroCat Lab Planner</h1>
+        <div class="cat-panel" data-scene="park" aria-label="Lab cat status">
+          <div class="scene-toolbar">
+            <label for="sceneSelect">Scene</label>
+            <select id="sceneSelect" aria-label="Cat scene">
+              <option value="park">Night park</option>
+              <option value="city">City walk</option>
+              <option value="campus">Campus path</option>
+            </select>
+          </div>
+          <div class="moon"></div>
+          <div class="scene-sky" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="scene-set scene-park" aria-hidden="true">
+            <span class="tree tree-one"></span>
+            <span class="tree tree-two"></span>
+            <span class="tree tree-three"></span>
+            <span class="tree tree-four"></span>
+            <span class="fountain">
+              <span class="fountain-tier fountain-base"></span>
+              <span class="fountain-tier fountain-middle"></span>
+              <span class="fountain-tier fountain-bowl"></span>
+              <span class="fountain-tier fountain-water"></span>
+              <span class="fountain-arc"></span>
+              <span class="fountain-spout"></span>
+            </span>
+          </div>
+          <div class="scene-set scene-city" aria-hidden="true">
+            <span class="building building-one"></span>
+            <span class="building building-two"></span>
+            <span class="building building-three"></span>
+            <span class="building building-four"></span>
+            <span class="building building-five"></span>
+            <span class="building building-six"></span>
+            <span class="building building-seven"></span>
+            <span class="building building-eight"></span>
+            <span class="building building-nine"></span>
+          </div>
+          <div class="scene-set scene-campus" aria-hidden="true">
+            <span class="campus-building"></span>
+            <span class="lamp lamp-one"></span>
+            <span class="lamp lamp-two"></span>
+          </div>
+          <div class="scene-ground" aria-hidden="true"></div>
+          <div class="cat">
+            <div class="cat-sprite" aria-hidden="true">
+              <div class="pixel-tail"></div>
+              <div class="pixel-body"></div>
+              <div class="pixel-head"></div>
+              <div class="pixel-ear left-ear"></div>
+              <div class="pixel-ear right-ear"></div>
+              <div class="pixel-eye left-eye"></div>
+              <div class="pixel-eye right-eye"></div>
+              <div class="pixel-nose"></div>
+              <div class="pixel-whiskers left-whiskers"></div>
+              <div class="pixel-whiskers right-whiskers"></div>
+            </div>
+          </div>
+          <div class="cat-stats">
+            <span id="catMood">Curious</span>
+            <strong id="catLevel">0%</strong>
+          </div>
+          <div class="mood-meter" aria-label="Lab cat happiness">
+            <span id="moodBar"></span>
+          </div>
+          <div class="cat-actions" aria-label="Lab cat actions">
+            <button id="feedCatButton" class="primary-button" type="button">
+              Feed the lab cat
+            </button>
+            <button id="petCatButton" class="secondary-button" type="button">
+              Pet the lab cat
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard" aria-label="Planner overview">
+        <article class="stat-card">
+          <span>Tasks done</span>
+          <strong id="tasksDone">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Upcoming deadlines</span>
+          <strong id="deadlineCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Reading queue</span>
+          <strong id="readingCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Checklist progress</span>
+          <strong id="checklistProgress">0%</strong>
+        </article>
+      </section>
+
+      <section class="planner-grid">
+        <article class="tool-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Today</p>
+              <h2>To-do List</h2>
+            </div>
+            <button id="clearDoneButton" class="ghost-button" type="button">Clear done</button>
+          </div>
+          <form id="taskForm" class="entry-form">
+            <input id="taskInput" type="text" placeholder="Review hippocampus notes" required />
+            <select id="taskCategory" aria-label="Task category">
+              <option>Study</option>
+              <option>Lab</option>
+              <option>Assignment</option>
+              <option>Life</option>
+            </select>
+            <button type="submit">Add</button>
+          </form>
+          <ul id="taskList" class="item-list"></ul>
+        </article>
+
+        <article class="tool-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Calendar</p>
+              <h2>Deadlines</h2>
+            </div>
+          </div>
+          <form id="deadlineForm" class="entry-form stacked">
+            <input id="deadlineTitle" type="text" placeholder="Lab report draft" required />
+            <input id="deadlineDate" type="date" required />
+            <select id="deadlineType" aria-label="Deadline type">
+              <option>Assignment</option>
+              <option>Exam</option>
+              <option>Lab</option>
+              <option>Personal</option>
+            </select>
+            <button type="submit">Track</button>
+          </form>
+          <ul id="deadlineList" class="item-list"></ul>
+        </article>
+
+        <article class="tool-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Library</p>
+              <h2>Reading List</h2>
+            </div>
+          </div>
+          <form id="readingForm" class="entry-form">
+            <input id="readingInput" type="text" placeholder="Synaptic plasticity paper" required />
+            <button type="submit">Add</button>
+          </form>
+          <ul id="readingList" class="item-list"></ul>
+        </article>
+
+        <article class="tool-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Protocol</p>
+              <h2>Experiment Checklist</h2>
+            </div>
+            <button id="resetChecklistButton" class="ghost-button" type="button">Reset</button>
+          </div>
+          <form id="checklistForm" class="entry-form">
+            <input id="checklistInput" type="text" placeholder="Calibrate microscope" required />
+            <button type="submit">Add</button>
+          </form>
+          <ul id="checklist" class="item-list"></ul>
+        </article>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
