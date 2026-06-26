@@ -1269,14 +1269,13 @@ h2 {
 .section-neurocat::before {
   content: "";
   position: absolute;
+  z-index: 2;
   left: 32px;
-  top: 30px;
+  top: 34px;
   width: 96px;
   height: 64px;
   background: #030405;
   box-shadow:
-    16px -16px 0 #030405,
-    64px -16px 0 #030405,
     -16px 16px 0 #030405,
     96px 16px 0 #030405,
     0 64px 0 #030405,
@@ -1288,22 +1287,103 @@ h2 {
 .section-neurocat::after {
   content: "";
   position: absolute;
-  left: 52px;
+  z-index: 1;
+  left: 112px;
+  top: 78px;
+  width: 18px;
+  height: 18px;
+  background: #030405;
+  box-shadow:
+    18px -12px 0 #030405,
+    30px -28px 0 #030405,
+    30px -44px 0 #030405,
+    18px -58px 0 #030405,
+    4px -58px 0 #030405;
+}
+
+.section-neurocat span {
+  position: absolute;
+  display: block;
+}
+
+.section-cat-ear {
+  z-index: 3;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  background: #030405;
+  box-shadow:
+    0 14px 0 #030405,
+    14px 14px 0 #030405,
+    0 28px 0 #030405,
+    14px 28px 0 #030405,
+    28px 28px 0 #030405;
+}
+
+.section-cat-ear.left {
+  left: 34px;
+}
+
+.section-cat-ear.right {
+  right: 48px;
+  transform: scaleX(-1);
+}
+
+.section-cat-eye {
+  z-index: 4;
   top: 58px;
   width: 14px;
   height: 14px;
   background: var(--gold);
   box-shadow:
-    5px 0 0 #0a0800,
-    44px 0 0 var(--gold),
-    49px 0 0 #0a0800,
-    -32px 18px 0 -5px var(--muted),
-    -32px 28px 0 -5px var(--muted),
-    -32px 38px 0 -5px var(--muted),
-    82px 18px 0 -5px var(--muted),
-    82px 28px 0 -5px var(--muted),
-    82px 38px 0 -5px var(--muted),
-    26px 28px 0 -4px #2b2227;
+    0 0 0 4px rgba(255, 216, 95, 0.14),
+    0 0 15px rgba(244, 201, 93, 0.72);
+}
+
+.section-cat-eye::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0;
+  width: 4px;
+  height: 14px;
+  background: #0a0800;
+}
+
+.section-cat-eye.left {
+  left: 54px;
+}
+
+.section-cat-eye.right {
+  left: 102px;
+}
+
+.section-cat-nose {
+  z-index: 4;
+  left: 80px;
+  top: 78px;
+  width: 12px;
+  height: 8px;
+  background: #2b2227;
+}
+
+.section-cat-whiskers {
+  z-index: 4;
+  top: 78px;
+  width: 34px;
+  height: 4px;
+  background: rgba(212, 218, 205, 0.82);
+  box-shadow:
+    0 -11px 0 rgba(212, 218, 205, 0.64),
+    0 11px 0 rgba(212, 218, 205, 0.64);
+}
+
+.section-cat-whiskers.left {
+  left: 10px;
+}
+
+.section-cat-whiskers.right {
+  right: 10px;
 }
 
 .study-cat {

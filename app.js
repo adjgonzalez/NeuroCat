@@ -276,7 +276,7 @@ function renderChecklist() {
 function renderMedia() {
   const items = [...state.media].sort(
     (a, b) =>
-      a.uploader.localeCompare(b.uploader) ||
+      personName(a.uploader).localeCompare(personName(b.uploader)) ||
       a.genre.localeCompare(b.genre) ||
       a.title.localeCompare(b.title),
   );
@@ -285,7 +285,7 @@ function renderMedia() {
     element: els.mediaGroups,
     items,
     empty: "No movie or series ideas yet.",
-    groupBy: (item) => `${item.uploader} - ${item.genre}`,
+    groupBy: (item) => `${personName(item.uploader)} - ${item.genre}`,
     metaFor: (item) => [item.type],
     onDelete: (id) => {
       state.media = state.media.filter((item) => item.id !== id);
@@ -313,7 +313,7 @@ function renderTreats() {
 function renderDateIdeas() {
   const items = [...state.dateIdeas].sort(
     (a, b) =>
-      a.uploader.localeCompare(b.uploader) ||
+      personName(a.uploader).localeCompare(personName(b.uploader)) ||
       a.category.localeCompare(b.category) ||
       a.title.localeCompare(b.title),
   );
@@ -322,7 +322,7 @@ function renderDateIdeas() {
     element: els.dateIdeaGroups,
     items,
     empty: "No date ideas yet.",
-    groupBy: (item) => `${item.uploader} - ${item.category}`,
+    groupBy: (item) => `${personName(item.uploader)} - ${item.category}`,
     metaFor: () => ["Idea"],
     onDelete: (id) => {
       state.dateIdeas = state.dateIdeas.filter((item) => item.id !== id);
@@ -520,6 +520,12 @@ function formatCalendarDate(dateString) {
   });
 }
 
+function personName(value) {
+  if (value === "Me") return "Iago";
+  if (value === "Her") return "Polly";
+  return value;
+}
+
 function pickCapsule(items, emptyMessage, element, getDetails) {
   if (!items.length) {
     element.textContent = emptyMessage;
@@ -632,7 +638,7 @@ els.mediaPickButton.addEventListener("click", () => {
     state.media,
     "The capsule machine needs at least one movie or series.",
     els.mediaCapsule,
-    (item) => `${item.type} - ${item.genre} - added by ${item.uploader}`,
+    (item) => `${item.type} - ${item.genre} - added by ${personName(item.uploader)}`,
   );
 });
 
@@ -673,7 +679,7 @@ els.datePickButton.addEventListener("click", () => {
     state.dateIdeas,
     "The capsule machine needs at least one date idea.",
     els.dateCapsule,
-    (item) => `${item.category} - suggested by ${item.uploader}`,
+    (item) => `${item.category} - suggested by ${personName(item.uploader)}`,
   );
 });
 
