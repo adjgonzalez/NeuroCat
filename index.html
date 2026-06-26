@@ -14,7 +14,15 @@
   </head>
   <body>
     <main class="app-shell">
-      <section class="hero" aria-labelledby="app-title">
+      <nav class="section-tabs" aria-label="NeuroCat sections">
+        <button class="tab-button active" type="button" data-section-target="home">Home</button>
+        <button class="tab-button" type="button" data-section-target="lab">Lab</button>
+        <button class="tab-button" type="button" data-section-target="cinema">Cinema</button>
+        <button class="tab-button" type="button" data-section-target="treats">Treats</button>
+        <button class="tab-button" type="button" data-section-target="dates">Dates</button>
+      </nav>
+
+      <section id="homeSection" class="hero app-section active" data-section="home" aria-labelledby="app-title">
         <h1 id="app-title" class="sr-only">NeuroCat Lab Planner</h1>
         <div class="cat-panel" data-scene="park" aria-label="Lab cat status">
           <div class="scene-toolbar">
@@ -95,14 +103,14 @@
         </div>
       </section>
 
-      <nav class="section-tabs" aria-label="NeuroCat sections">
-        <button class="tab-button active" type="button" data-section-target="lab">Lab</button>
-        <button class="tab-button" type="button" data-section-target="cinema">Cinema</button>
-        <button class="tab-button" type="button" data-section-target="treats">Treats</button>
-        <button class="tab-button" type="button" data-section-target="dates">Dates</button>
-      </nav>
-
-      <section id="labSection" class="app-section active" data-section="lab">
+      <section id="labSection" class="app-section" data-section="lab">
+        <header class="screen-heading">
+          <div>
+            <p class="eyebrow">NeuroCat workspace</p>
+            <h2>Lab Planner</h2>
+          </div>
+          <div class="section-neurocat study-cat" aria-hidden="true"></div>
+        </header>
         <section class="dashboard" aria-label="Planner overview">
           <article class="stat-card">
             <span>Tasks done</span>
@@ -206,6 +214,20 @@
               </div>
               <div class="mini-neurocat" aria-hidden="true"></div>
             </div>
+            <div class="gacha-stage cinema-gacha" aria-label="Cinema capsule picker">
+              <div class="section-neurocat projector-cat" aria-hidden="true"></div>
+              <div class="gacha-machine" aria-hidden="true">
+                <span class="gacha-globe"></span>
+                <span class="gacha-capsule one"></span>
+                <span class="gacha-capsule two"></span>
+                <span class="gacha-capsule three"></span>
+                <span class="gacha-body"></span>
+                <span class="gacha-crank"></span>
+                <span class="gacha-chute"></span>
+              </div>
+              <div class="capsule-result" id="mediaCapsule">Add a few titles, then let NeuroCat pick one.</div>
+              <button id="mediaPickButton" class="primary-button gacha-button" type="button">Drop a show capsule</button>
+            </div>
             <form id="mediaForm" class="entry-form feature-form">
               <input id="mediaTitle" type="text" placeholder="Movie or series title" required />
               <select id="mediaType" aria-label="Media type">
@@ -242,6 +264,14 @@
               </div>
               <div class="mini-neurocat snack-cat" aria-hidden="true"></div>
             </div>
+            <div class="treat-scene" aria-hidden="true">
+              <div class="section-neurocat snack-helper-cat"></div>
+              <div class="treat-table">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
             <form id="treatForm" class="entry-form treat-form">
               <input id="treatDate" type="date" required />
               <input id="treatTitle" type="text" placeholder="Sushi, bubble tea, ice cream..." required />
@@ -268,6 +298,20 @@
                 <h2>Date Ideas</h2>
               </div>
               <div class="mini-neurocat heart-cat" aria-hidden="true"></div>
+            </div>
+            <div class="gacha-stage date-gacha" aria-label="Date idea capsule picker">
+              <div class="section-neurocat date-cat" aria-hidden="true"></div>
+              <div class="gacha-machine heart-machine" aria-hidden="true">
+                <span class="gacha-globe"></span>
+                <span class="gacha-capsule one"></span>
+                <span class="gacha-capsule two"></span>
+                <span class="gacha-capsule three"></span>
+                <span class="gacha-body"></span>
+                <span class="gacha-crank"></span>
+                <span class="gacha-chute"></span>
+              </div>
+              <div class="capsule-result" id="dateCapsule">Add date ideas, then let NeuroCat pull a capsule.</div>
+              <button id="datePickButton" class="primary-button gacha-button" type="button">Drop a date capsule</button>
             </div>
             <form id="dateIdeaForm" class="entry-form feature-form">
               <input id="dateIdeaTitle" type="text" placeholder="Museum night, horror marathon, cat cafe..." required />

@@ -56,6 +56,8 @@ const els = {
   mediaUploader: document.querySelector("#mediaUploader"),
   mediaGenre: document.querySelector("#mediaGenre"),
   mediaGroups: document.querySelector("#mediaGroups"),
+  mediaPickButton: document.querySelector("#mediaPickButton"),
+  mediaCapsule: document.querySelector("#mediaCapsule"),
   treatForm: document.querySelector("#treatForm"),
   treatDate: document.querySelector("#treatDate"),
   treatTitle: document.querySelector("#treatTitle"),
@@ -66,6 +68,8 @@ const els = {
   dateIdeaUploader: document.querySelector("#dateIdeaUploader"),
   dateIdeaCategory: document.querySelector("#dateIdeaCategory"),
   dateIdeaGroups: document.querySelector("#dateIdeaGroups"),
+  datePickButton: document.querySelector("#datePickButton"),
+  dateCapsule: document.querySelector("#dateCapsule"),
 };
 
 function loadState() {
@@ -75,7 +79,7 @@ function loadState() {
     return {
       cat: 32,
       scene: "park",
-      activeSection: "lab",
+      activeSection: "home",
       tasks: [],
       deadlines: [],
       readings: [],
@@ -89,7 +93,7 @@ function loadState() {
   try {
     return {
       scene: "park",
-      activeSection: "lab",
+      activeSection: "home",
       media: [],
       treats: [],
       dateIdeas: [],
@@ -181,8 +185,8 @@ function render() {
 }
 
 function renderSections() {
-  const allowed = ["lab", "cinema", "treats", "dates"];
-  if (!allowed.includes(state.activeSection)) state.activeSection = "lab";
+  const allowed = ["home", "lab", "cinema", "treats", "dates"];
+  if (!allowed.includes(state.activeSection)) state.activeSection = "home";
 
   els.sectionTabs.forEach((button) => {
     const isActive = button.dataset.sectionTarget === state.activeSection;
@@ -516,6 +520,29 @@ function formatCalendarDate(dateString) {
   });
 }
 
+function pickCapsule(items, emptyMessage, element, getDetails) {
+  if (!items.length) {
+    element.textContent = emptyMessage;
+    reactCat("curious");
+    return;
+  }
+
+  const selected = items[Math.floor(Math.random() * items.length)];
+  element.innerHTML = "";
+
+  const title = document.createElement("strong");
+  title.textContent = selected.title;
+
+  const details = document.createElement("span");
+  details.textContent = getDetails(selected);
+
+  element.append(title, details);
+  petStreak = 0;
+  rewardCat(2);
+  reactCat("pleased", 2200);
+  render();
+}
+
 function startOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
@@ -600,6 +627,15 @@ els.mediaForm.addEventListener("submit", (event) => {
   render();
 });
 
+els.mediaPickButton.addEventListener("click", () => {
+  pickCapsule(
+    state.media,
+    "The capsule machine needs at least one movie or series.",
+    els.mediaCapsule,
+    (item) => `${item.type} - ${item.genre} - added by ${item.uploader}`,
+  );
+});
+
 els.treatForm.addEventListener("submit", (event) => {
   event.preventDefault();
   state.treats.push(
@@ -630,6 +666,15 @@ els.dateIdeaForm.addEventListener("submit", (event) => {
   reactCat("petted", 1900);
   rewardCat(4);
   render();
+});
+
+els.datePickButton.addEventListener("click", () => {
+  pickCapsule(
+    state.dateIdeas,
+    "The capsule machine needs at least one date idea.",
+    els.dateCapsule,
+    (item) => `${item.category} - suggested by ${item.uploader}`,
+  );
 });
 
 els.clearDoneButton.addEventListener("click", () => {
