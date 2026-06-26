@@ -308,7 +308,12 @@
               </select>
               <button type="submit">Plan</button>
             </form>
-            <div id="treatCalendar" class="calendar-list"></div>
+            <div class="calendar-toolbar">
+              <button id="prevTreatMonthButton" class="ghost-button" type="button">Prev</button>
+              <strong id="treatCalendarTitle">This month</strong>
+              <button id="nextTreatMonthButton" class="ghost-button" type="button">Next</button>
+            </div>
+            <div id="treatCalendar" class="treat-calendar" aria-label="Treat calendar"></div>
           </article>
         </div>
       </section>

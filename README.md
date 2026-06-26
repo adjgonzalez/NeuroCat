@@ -13,7 +13,7 @@ NeuroCat is a lightweight Progressive Web App for organizing study, shared plans
 - Selectable pixel-art scenes
 - Home screen with NeuroCat strolling through selectable scenes
 - Home cinema backlog for movies and series with a capsule picker
-- Treat and takeout calendar
+- Full monthly treat and takeout calendar
 - Shared date idea backlog with a capsule picker
 - Optional Firebase Firestore sync for two-person remote use
 - Offline-capable PWA behavior through a service worker

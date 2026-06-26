@@ -21,6 +21,7 @@ let petStreak = 0;
 let petResetTimer;
 let reactionTimer;
 let catReaction = "idle";
+let treatCalendarMonth = startOfMonth(new Date());
 let remoteReady = false;
 let applyingRemoteState = false;
 let remoteSaveTimer;
@@ -69,6 +70,9 @@ const els = {
   treatDate: document.querySelector("#treatDate"),
   treatTitle: document.querySelector("#treatTitle"),
   treatType: document.querySelector("#treatType"),
+  prevTreatMonthButton: document.querySelector("#prevTreatMonthButton"),
+  nextTreatMonthButton: document.querySelector("#nextTreatMonthButton"),
+  treatCalendarTitle: document.querySelector("#treatCalendarTitle"),
   treatCalendar: document.querySelector("#treatCalendar"),
   dateIdeaForm: document.querySelector("#dateIdeaForm"),
   dateIdeaTitle: document.querySelector("#dateIdeaTitle"),
@@ -386,18 +390,77 @@ function renderMedia() {
 
 function renderTreats() {
   const items = [...state.treats].sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  renderGroupedCards({
-    element: els.treatCalendar,
-    items,
-    empty: "No treat days planned yet.",
-    groupBy: (item) => formatCalendarDate(item.date),
-    metaFor: (item) => [item.type],
-    onDelete: (id) => {
-      state.treats = state.treats.filter((item) => item.id !== id);
-      reactCat("startled");
-    },
+  els.treatCalendar.innerHTML = "";
+  els.treatCalendarTitle.textContent = treatCalendarMonth.toLocaleDateString(undefined, {
+    month: "long",
+    year: "numeric",
   });
+
+  ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((day) => {
+    const heading = document.createElement("div");
+    heading.className = "calendar-weekday";
+    heading.textContent = day;
+    els.treatCalendar.append(heading);
+  });
+
+  const firstDayOffset = treatCalendarMonth.getDay();
+  const daysInMonth = new Date(
+    treatCalendarMonth.getFullYear(),
+    treatCalendarMonth.getMonth() + 1,
+    0,
+  ).getDate();
+
+  for (let index = 0; index < firstDayOffset; index += 1) {
+    const blankDay = document.createElement("div");
+    blankDay.className = "calendar-day empty";
+    els.treatCalendar.append(blankDay);
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const dateKey = formatDateKey(
+      new Date(treatCalendarMonth.getFullYear(), treatCalendarMonth.getMonth(), day),
+    );
+    const dayPlans = items.filter((item) => item.date === dateKey);
+
+    const dayCell = document.createElement("section");
+    dayCell.className = `calendar-day${dayPlans.length ? " planned" : ""}`;
+
+    const dayNumber = document.createElement("strong");
+    dayNumber.textContent = String(day);
+    dayCell.append(dayNumber);
+
+    const planList = document.createElement("div");
+    planList.className = "calendar-plans";
+
+    dayPlans.forEach((item) => {
+      const plan = document.createElement("div");
+      plan.className = "calendar-plan";
+
+      const text = document.createElement("span");
+      text.textContent = item.title;
+
+      const type = document.createElement("small");
+      type.textContent = item.type;
+
+      const remove = document.createElement("button");
+      remove.className = "calendar-delete";
+      remove.type = "button";
+      remove.setAttribute("aria-label", `Delete ${item.title}`);
+      remove.textContent = "x";
+      remove.addEventListener("click", () => {
+        state.treats = state.treats.filter((treat) => treat.id !== item.id);
+        rewardCat(-1);
+        reactCat("startled");
+        render();
+      });
+
+      plan.append(text, type, remove);
+      planList.append(plan);
+    });
+
+    dayCell.append(planList);
+    els.treatCalendar.append(dayCell);
+  }
 }
 
 function renderDateIdeas() {
@@ -610,6 +673,21 @@ function formatCalendarDate(dateString) {
   });
 }
 
+function startOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function shiftMonth(date, amount) {
+  return new Date(date.getFullYear(), date.getMonth() + amount, 1);
+}
+
+function formatDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function personName(value) {
   if (value === "Me") return "Iago";
   if (value === "Her") return "Polly";
@@ -734,6 +812,7 @@ els.mediaPickButton.addEventListener("click", () => {
 
 els.treatForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  treatCalendarMonth = startOfMonth(new Date(`${els.treatDate.value}T12:00:00`));
   state.treats.push(
     createItem({
       title: els.treatTitle.value,
@@ -745,6 +824,20 @@ els.treatForm.addEventListener("submit", (event) => {
   petStreak = 0;
   reactCat("fed", 2400);
   rewardCat(5);
+  render();
+});
+
+els.prevTreatMonthButton.addEventListener("click", () => {
+  treatCalendarMonth = shiftMonth(treatCalendarMonth, -1);
+  petStreak = 0;
+  reactCat("curious");
+  render();
+});
+
+els.nextTreatMonthButton.addEventListener("click", () => {
+  treatCalendarMonth = shiftMonth(treatCalendarMonth, 1);
+  petStreak = 0;
+  reactCat("curious");
   render();
 });
 
