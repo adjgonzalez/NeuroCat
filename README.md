@@ -64,9 +64,20 @@ NeuroCat can sync between two phones with Firebase Firestore.
 
 1. Create a Firebase project at `https://console.firebase.google.com/`.
 2. Add a Web app to the Firebase project.
-3. Copy the Firebase config values into `firebase-config.js`.
+3. Add the Firebase config values as GitHub repository secrets.
 4. Create a Firestore database.
 5. Publish Firestore rules for the shared NeuroCat document.
+
+Required GitHub repository secrets:
+
+- `FIREBASE_API_KEY`
+- `FIREBASE_AUTH_DOMAIN`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_STORAGE_BUCKET`
+- `FIREBASE_MESSAGING_SENDER_ID`
+- `FIREBASE_APP_ID`
+
+The committed `firebase-config.js` intentionally contains blank placeholders. During GitHub Pages deployment, `.github/workflows/pages.yml` writes the real config from repository secrets into the deployed artifact.
 
 Example Firestore rules for a simple shared two-person app:
 

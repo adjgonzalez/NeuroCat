@@ -1,7 +1,9 @@
-import { firebaseConfig, firestorePath } from "./firebase-config.js";
-
 const STORAGE_KEY = "neurocat-lab-planner";
 const FIREBASE_SDK_VERSION = "10.12.5";
+const DEFAULT_FIRESTORE_PATH = {
+  collection: "neurocat",
+  document: "shared-planner",
+};
 
 const initialChecklist = [
   "Prepare materials",
@@ -26,6 +28,8 @@ let remoteReady = false;
 let applyingRemoteState = false;
 let remoteSaveTimer;
 let remoteSave;
+let firebaseConfig = {};
+let firestorePath = DEFAULT_FIRESTORE_PATH;
 
 const els = {
   sectionTabs: document.querySelectorAll(".tab-button"),
@@ -133,6 +137,16 @@ function isFirebaseConfigured() {
   );
 }
 
+async function loadFirebaseConfig() {
+  try {
+    const configModule = await import("./firebase-config.js");
+    firebaseConfig = configModule.firebaseConfig || {};
+    firestorePath = configModule.firestorePath || DEFAULT_FIRESTORE_PATH;
+  } catch (error) {
+    console.info("NeuroCat remote sync config was not found.", error);
+  }
+}
+
 function getSharedState() {
   const { activeSection, ...sharedState } = state;
   return {
@@ -162,6 +176,8 @@ function queueRemoteSave() {
 }
 
 async function initRemoteSync() {
+  await loadFirebaseConfig();
+
   if (!isFirebaseConfigured()) {
     console.info("NeuroCat remote sync is waiting for firebase-config.js.");
     return;
