@@ -1,6 +1,6 @@
 # NeuroCat Lab Planner
 
-NeuroCat Lab Planner is a lightweight Progressive Web App for organizing study and lab work. It combines practical planning tools with a small animated pixel-art cat scene.
+NeuroCat is a lightweight Progressive Web App for organizing study, shared plans, and cozy downtime. It combines practical planning tools with a small animated pixel-art cat scene.
 
 ## Features
 
@@ -11,6 +11,9 @@ NeuroCat Lab Planner is a lightweight Progressive Web App for organizing study a
 - Local progress and mood meter
 - Animated lab cat with feeding and petting interactions
 - Selectable pixel-art scenes
+- Home cinema backlog for movies and series
+- Treat and takeout calendar
+- Shared date idea backlog
 - Offline-capable PWA behavior through a service worker
 
 ## Local Development

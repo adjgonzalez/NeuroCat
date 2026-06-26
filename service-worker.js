@@ -1,4 +1,4 @@
-const CACHE_NAME = "neurocat-lab-planner-v25";
+const CACHE_NAME = "neurocat-lab-planner-v26";
 const FILES = [
   "./",
   "./index.html",

@@ -20,6 +20,8 @@ let reactionTimer;
 let catReaction = "idle";
 
 const els = {
+  sectionTabs: document.querySelectorAll(".tab-button"),
+  appSections: document.querySelectorAll(".app-section"),
   catPanel: document.querySelector(".cat-panel"),
   sceneSelect: document.querySelector("#sceneSelect"),
   taskForm: document.querySelector("#taskForm"),
@@ -48,6 +50,22 @@ const els = {
   deadlineCount: document.querySelector("#deadlineCount"),
   readingCount: document.querySelector("#readingCount"),
   checklistProgress: document.querySelector("#checklistProgress"),
+  mediaForm: document.querySelector("#mediaForm"),
+  mediaTitle: document.querySelector("#mediaTitle"),
+  mediaType: document.querySelector("#mediaType"),
+  mediaUploader: document.querySelector("#mediaUploader"),
+  mediaGenre: document.querySelector("#mediaGenre"),
+  mediaGroups: document.querySelector("#mediaGroups"),
+  treatForm: document.querySelector("#treatForm"),
+  treatDate: document.querySelector("#treatDate"),
+  treatTitle: document.querySelector("#treatTitle"),
+  treatType: document.querySelector("#treatType"),
+  treatCalendar: document.querySelector("#treatCalendar"),
+  dateIdeaForm: document.querySelector("#dateIdeaForm"),
+  dateIdeaTitle: document.querySelector("#dateIdeaTitle"),
+  dateIdeaUploader: document.querySelector("#dateIdeaUploader"),
+  dateIdeaCategory: document.querySelector("#dateIdeaCategory"),
+  dateIdeaGroups: document.querySelector("#dateIdeaGroups"),
 };
 
 function loadState() {
@@ -57,16 +75,24 @@ function loadState() {
     return {
       cat: 32,
       scene: "park",
+      activeSection: "lab",
       tasks: [],
       deadlines: [],
       readings: [],
       checklist: initialChecklist.map((title) => createItem({ title })),
+      media: [],
+      treats: [],
+      dateIdeas: [],
     };
   }
 
   try {
     return {
       scene: "park",
+      activeSection: "lab",
+      media: [],
+      treats: [],
+      dateIdeas: [],
       ...JSON.parse(saved),
     };
   } catch {
@@ -141,13 +167,32 @@ function petCat() {
 }
 
 function render() {
+  renderSections();
   renderScene();
   renderTasks();
   renderDeadlines();
   renderReadings();
   renderChecklist();
+  renderMedia();
+  renderTreats();
+  renderDateIdeas();
   renderStats();
   saveState();
+}
+
+function renderSections() {
+  const allowed = ["lab", "cinema", "treats", "dates"];
+  if (!allowed.includes(state.activeSection)) state.activeSection = "lab";
+
+  els.sectionTabs.forEach((button) => {
+    const isActive = button.dataset.sectionTarget === state.activeSection;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+
+  els.appSections.forEach((section) => {
+    section.classList.toggle("active", section.dataset.section === state.activeSection);
+  });
 }
 
 function renderTasks() {
@@ -224,6 +269,64 @@ function renderChecklist() {
   });
 }
 
+function renderMedia() {
+  const items = [...state.media].sort(
+    (a, b) =>
+      a.uploader.localeCompare(b.uploader) ||
+      a.genre.localeCompare(b.genre) ||
+      a.title.localeCompare(b.title),
+  );
+
+  renderGroupedCards({
+    element: els.mediaGroups,
+    items,
+    empty: "No movie or series ideas yet.",
+    groupBy: (item) => `${item.uploader} - ${item.genre}`,
+    metaFor: (item) => [item.type],
+    onDelete: (id) => {
+      state.media = state.media.filter((item) => item.id !== id);
+      reactCat("startled");
+    },
+  });
+}
+
+function renderTreats() {
+  const items = [...state.treats].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  renderGroupedCards({
+    element: els.treatCalendar,
+    items,
+    empty: "No treat days planned yet.",
+    groupBy: (item) => formatCalendarDate(item.date),
+    metaFor: (item) => [item.type],
+    onDelete: (id) => {
+      state.treats = state.treats.filter((item) => item.id !== id);
+      reactCat("startled");
+    },
+  });
+}
+
+function renderDateIdeas() {
+  const items = [...state.dateIdeas].sort(
+    (a, b) =>
+      a.uploader.localeCompare(b.uploader) ||
+      a.category.localeCompare(b.category) ||
+      a.title.localeCompare(b.title),
+  );
+
+  renderGroupedCards({
+    element: els.dateIdeaGroups,
+    items,
+    empty: "No date ideas yet.",
+    groupBy: (item) => `${item.uploader} - ${item.category}`,
+    metaFor: () => ["Idea"],
+    onDelete: (id) => {
+      state.dateIdeas = state.dateIdeas.filter((item) => item.id !== id);
+      reactCat("startled");
+    },
+  });
+}
+
 function renderList({ element, items, empty, getMeta, onToggle, onDelete }) {
   element.innerHTML = "";
 
@@ -281,6 +384,78 @@ function renderList({ element, items, empty, getMeta, onToggle, onDelete }) {
   });
 }
 
+function renderGroupedCards({ element, items, empty, groupBy, metaFor, onDelete }) {
+  element.innerHTML = "";
+
+  if (!items.length) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "empty-state";
+    emptyState.textContent = empty;
+    element.append(emptyState);
+    return;
+  }
+
+  const groups = new Map();
+  items.forEach((item) => {
+    const key = groupBy(item);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  });
+
+  groups.forEach((groupItems, title) => {
+    const group = document.createElement("section");
+    group.className = "group-block";
+
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+
+    const list = document.createElement("ul");
+    list.className = "item-list grouped-items";
+
+    groupItems.forEach((item) => {
+      const row = document.createElement("li");
+      row.className = "item grouped-item";
+
+      const icon = document.createElement("span");
+      icon.className = "mini-check";
+      icon.textContent = "NC";
+
+      const content = document.createElement("div");
+      const itemTitle = document.createElement("span");
+      itemTitle.className = "item-title";
+      itemTitle.textContent = item.title;
+
+      const meta = document.createElement("span");
+      meta.className = "meta";
+      metaFor(item).forEach((value) => {
+        const pill = document.createElement("span");
+        pill.className = "pill";
+        pill.textContent = value;
+        meta.append(pill);
+      });
+
+      content.append(itemTitle, meta);
+
+      const remove = document.createElement("button");
+      remove.className = "delete-button";
+      remove.type = "button";
+      remove.setAttribute("aria-label", "Delete item");
+      remove.textContent = "x";
+      remove.addEventListener("click", () => {
+        onDelete(item.id);
+        rewardCat(-1);
+        render();
+      });
+
+      row.append(icon, content, remove);
+      list.append(row);
+    });
+
+    group.append(heading, list);
+    element.append(group);
+  });
+}
+
 function renderStats() {
   const tasksDone = state.tasks.filter((item) => item.done).length;
   const activeDeadlines = state.deadlines.filter((item) => !item.done).length;
@@ -332,9 +507,27 @@ function formatDeadline(dateString) {
   return `Due in ${diff} days`;
 }
 
+function formatCalendarDate(dateString) {
+  const date = new Date(`${dateString}T12:00:00`);
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 function startOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
+
+els.sectionTabs.forEach((button) => {
+  button.addEventListener("click", () => {
+    state.activeSection = button.dataset.sectionTarget;
+    petStreak = 0;
+    reactCat("curious");
+    render();
+  });
+});
 
 els.taskForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -387,6 +580,55 @@ els.checklistForm.addEventListener("submit", (event) => {
   els.checklistForm.reset();
   petStreak = 0;
   reactCat("working");
+  render();
+});
+
+els.mediaForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  state.media.push(
+    createItem({
+      title: els.mediaTitle.value,
+      type: els.mediaType.value,
+      uploader: els.mediaUploader.value,
+      genre: els.mediaGenre.value,
+    }),
+  );
+  els.mediaForm.reset();
+  petStreak = 0;
+  reactCat("pleased");
+  rewardCat(3);
+  render();
+});
+
+els.treatForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  state.treats.push(
+    createItem({
+      title: els.treatTitle.value,
+      date: els.treatDate.value,
+      type: els.treatType.value,
+    }),
+  );
+  els.treatForm.reset();
+  petStreak = 0;
+  reactCat("fed", 2400);
+  rewardCat(5);
+  render();
+});
+
+els.dateIdeaForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  state.dateIdeas.push(
+    createItem({
+      title: els.dateIdeaTitle.value,
+      uploader: els.dateIdeaUploader.value,
+      category: els.dateIdeaCategory.value,
+    }),
+  );
+  els.dateIdeaForm.reset();
+  petStreak = 0;
+  reactCat("petted", 1900);
+  rewardCat(4);
   render();
 });
 

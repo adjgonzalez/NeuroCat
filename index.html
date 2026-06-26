@@ -95,96 +95,199 @@
         </div>
       </section>
 
-      <section class="dashboard" aria-label="Planner overview">
-        <article class="stat-card">
-          <span>Tasks done</span>
-          <strong id="tasksDone">0</strong>
-        </article>
-        <article class="stat-card">
-          <span>Upcoming deadlines</span>
-          <strong id="deadlineCount">0</strong>
-        </article>
-        <article class="stat-card">
-          <span>Reading queue</span>
-          <strong id="readingCount">0</strong>
-        </article>
-        <article class="stat-card">
-          <span>Checklist progress</span>
-          <strong id="checklistProgress">0%</strong>
-        </article>
+      <nav class="section-tabs" aria-label="NeuroCat sections">
+        <button class="tab-button active" type="button" data-section-target="lab">Lab</button>
+        <button class="tab-button" type="button" data-section-target="cinema">Cinema</button>
+        <button class="tab-button" type="button" data-section-target="treats">Treats</button>
+        <button class="tab-button" type="button" data-section-target="dates">Dates</button>
+      </nav>
+
+      <section id="labSection" class="app-section active" data-section="lab">
+        <section class="dashboard" aria-label="Planner overview">
+          <article class="stat-card">
+            <span>Tasks done</span>
+            <strong id="tasksDone">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Upcoming deadlines</span>
+            <strong id="deadlineCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Reading queue</span>
+            <strong id="readingCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Checklist progress</span>
+            <strong id="checklistProgress">0%</strong>
+          </article>
+        </section>
+
+        <section class="planner-grid">
+          <article class="tool-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Today</p>
+                <h2>To-do List</h2>
+              </div>
+              <button id="clearDoneButton" class="ghost-button" type="button">Clear done</button>
+            </div>
+            <form id="taskForm" class="entry-form">
+              <input id="taskInput" type="text" placeholder="Review hippocampus notes" required />
+              <select id="taskCategory" aria-label="Task category">
+                <option>Study</option>
+                <option>Lab</option>
+                <option>Assignment</option>
+                <option>Life</option>
+              </select>
+              <button type="submit">Add</button>
+            </form>
+            <ul id="taskList" class="item-list"></ul>
+          </article>
+
+          <article class="tool-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Calendar</p>
+                <h2>Deadlines</h2>
+              </div>
+            </div>
+            <form id="deadlineForm" class="entry-form stacked">
+              <input id="deadlineTitle" type="text" placeholder="Lab report draft" required />
+              <input id="deadlineDate" type="date" required />
+              <select id="deadlineType" aria-label="Deadline type">
+                <option>Assignment</option>
+                <option>Exam</option>
+                <option>Lab</option>
+                <option>Personal</option>
+              </select>
+              <button type="submit">Track</button>
+            </form>
+            <ul id="deadlineList" class="item-list"></ul>
+          </article>
+
+          <article class="tool-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Library</p>
+                <h2>Reading List</h2>
+              </div>
+            </div>
+            <form id="readingForm" class="entry-form">
+              <input id="readingInput" type="text" placeholder="Synaptic plasticity paper" required />
+              <button type="submit">Add</button>
+            </form>
+            <ul id="readingList" class="item-list"></ul>
+          </article>
+
+          <article class="tool-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Protocol</p>
+                <h2>Experiment Checklist</h2>
+              </div>
+              <button id="resetChecklistButton" class="ghost-button" type="button">Reset</button>
+            </div>
+            <form id="checklistForm" class="entry-form">
+              <input id="checklistInput" type="text" placeholder="Calibrate microscope" required />
+              <button type="submit">Add</button>
+            </form>
+            <ul id="checklist" class="item-list"></ul>
+          </article>
+        </section>
       </section>
 
-      <section class="planner-grid">
-        <article class="tool-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Today</p>
-              <h2>To-do List</h2>
+      <section id="cinemaSection" class="app-section" data-section="cinema">
+        <div class="feature-grid">
+          <article class="tool-panel feature-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Home cinema</p>
+                <h2>Backlog</h2>
+              </div>
+              <div class="mini-neurocat" aria-hidden="true"></div>
             </div>
-            <button id="clearDoneButton" class="ghost-button" type="button">Clear done</button>
-          </div>
-          <form id="taskForm" class="entry-form">
-            <input id="taskInput" type="text" placeholder="Review hippocampus notes" required />
-            <select id="taskCategory" aria-label="Task category">
-              <option>Study</option>
-              <option>Lab</option>
-              <option>Assignment</option>
-              <option>Life</option>
-            </select>
-            <button type="submit">Add</button>
-          </form>
-          <ul id="taskList" class="item-list"></ul>
-        </article>
+            <form id="mediaForm" class="entry-form feature-form">
+              <input id="mediaTitle" type="text" placeholder="Movie or series title" required />
+              <select id="mediaType" aria-label="Media type">
+                <option>Movie</option>
+                <option>Series</option>
+              </select>
+              <select id="mediaUploader" aria-label="Uploaded by">
+                <option>Me</option>
+                <option>Her</option>
+              </select>
+              <select id="mediaGenre" aria-label="Genre">
+                <option>Horror</option>
+                <option>Thriller</option>
+                <option>Comedy</option>
+                <option>Drama</option>
+                <option>Documentary</option>
+                <option>Animation</option>
+                <option>Other</option>
+              </select>
+              <button type="submit">Add</button>
+            </form>
+            <div id="mediaGroups" class="grouped-list"></div>
+          </article>
+        </div>
+      </section>
 
-        <article class="tool-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Calendar</p>
-              <h2>Deadlines</h2>
+      <section id="treatsSection" class="app-section" data-section="treats">
+        <div class="feature-grid">
+          <article class="tool-panel feature-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Treat calendar</p>
+                <h2>Takeout & Treats</h2>
+              </div>
+              <div class="mini-neurocat snack-cat" aria-hidden="true"></div>
             </div>
-          </div>
-          <form id="deadlineForm" class="entry-form stacked">
-            <input id="deadlineTitle" type="text" placeholder="Lab report draft" required />
-            <input id="deadlineDate" type="date" required />
-            <select id="deadlineType" aria-label="Deadline type">
-              <option>Assignment</option>
-              <option>Exam</option>
-              <option>Lab</option>
-              <option>Personal</option>
-            </select>
-            <button type="submit">Track</button>
-          </form>
-          <ul id="deadlineList" class="item-list"></ul>
-        </article>
+            <form id="treatForm" class="entry-form treat-form">
+              <input id="treatDate" type="date" required />
+              <input id="treatTitle" type="text" placeholder="Sushi, bubble tea, ice cream..." required />
+              <select id="treatType" aria-label="Treat type">
+                <option>Takeout</option>
+                <option>Dessert</option>
+                <option>Snack</option>
+                <option>Drink</option>
+                <option>Homemade</option>
+              </select>
+              <button type="submit">Plan</button>
+            </form>
+            <div id="treatCalendar" class="calendar-list"></div>
+          </article>
+        </div>
+      </section>
 
-        <article class="tool-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Library</p>
-              <h2>Reading List</h2>
+      <section id="datesSection" class="app-section" data-section="dates">
+        <div class="feature-grid">
+          <article class="tool-panel feature-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Together</p>
+                <h2>Date Ideas</h2>
+              </div>
+              <div class="mini-neurocat heart-cat" aria-hidden="true"></div>
             </div>
-          </div>
-          <form id="readingForm" class="entry-form">
-            <input id="readingInput" type="text" placeholder="Synaptic plasticity paper" required />
-            <button type="submit">Add</button>
-          </form>
-          <ul id="readingList" class="item-list"></ul>
-        </article>
-
-        <article class="tool-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Protocol</p>
-              <h2>Experiment Checklist</h2>
-            </div>
-            <button id="resetChecklistButton" class="ghost-button" type="button">Reset</button>
-          </div>
-          <form id="checklistForm" class="entry-form">
-            <input id="checklistInput" type="text" placeholder="Calibrate microscope" required />
-            <button type="submit">Add</button>
-          </form>
-          <ul id="checklist" class="item-list"></ul>
-        </article>
+            <form id="dateIdeaForm" class="entry-form feature-form">
+              <input id="dateIdeaTitle" type="text" placeholder="Museum night, horror marathon, cat cafe..." required />
+              <select id="dateIdeaUploader" aria-label="Suggested by">
+                <option>Me</option>
+                <option>Her</option>
+              </select>
+              <select id="dateIdeaCategory" aria-label="Date category">
+                <option>Cozy</option>
+                <option>Food</option>
+                <option>Outdoors</option>
+                <option>Movie night</option>
+                <option>Study break</option>
+                <option>Adventure</option>
+              </select>
+              <button type="submit">Add</button>
+            </form>
+            <div id="dateIdeaGroups" class="grouped-list"></div>
+          </article>
+        </div>
       </section>
     </main>
 
