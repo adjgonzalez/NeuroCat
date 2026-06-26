@@ -1,4 +1,7 @@
+import { firebaseConfig, firestorePath } from "./firebase-config.js";
+
 const STORAGE_KEY = "neurocat-lab-planner";
+const FIREBASE_SDK_VERSION = "10.12.5";
 
 const initialChecklist = [
   "Prepare materials",
@@ -18,6 +21,10 @@ let petStreak = 0;
 let petResetTimer;
 let reactionTimer;
 let catReaction = "idle";
+let remoteReady = false;
+let applyingRemoteState = false;
+let remoteSaveTimer;
+let remoteSave;
 
 const els = {
   sectionTabs: document.querySelectorAll(".tab-button"),
@@ -107,6 +114,89 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+  if (remoteReady && !applyingRemoteState) {
+    queueRemoteSave();
+  }
+}
+
+function isFirebaseConfigured() {
+  return Boolean(
+    firebaseConfig.apiKey &&
+      firebaseConfig.authDomain &&
+      firebaseConfig.projectId &&
+      firebaseConfig.appId,
+  );
+}
+
+function getSharedState() {
+  const { activeSection, ...sharedState } = state;
+  return {
+    ...sharedState,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+function applySharedState(sharedState) {
+  const currentSection = state.activeSection;
+  state = {
+    ...loadState(),
+    ...sharedState,
+    activeSection: currentSection,
+  };
+  delete state.updatedAt;
+}
+
+function queueRemoteSave() {
+  window.clearTimeout(remoteSaveTimer);
+  remoteSaveTimer = window.setTimeout(() => {
+    if (!remoteSave) return;
+    remoteSave(getSharedState()).catch((error) => {
+      console.warn("NeuroCat sync save failed", error);
+    });
+  }, 350);
+}
+
+async function initRemoteSync() {
+  if (!isFirebaseConfigured()) {
+    console.info("NeuroCat remote sync is waiting for firebase-config.js.");
+    return;
+  }
+
+  try {
+    const [{ initializeApp }, { getFirestore, doc, setDoc, onSnapshot }] = await Promise.all([
+      import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app.js`),
+      import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`),
+    ]);
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const sharedDoc = doc(db, firestorePath.collection, firestorePath.document);
+
+    remoteSave = (nextState) => setDoc(sharedDoc, nextState, { merge: true });
+
+    onSnapshot(
+      sharedDoc,
+      (snapshot) => {
+        if (!snapshot.exists()) {
+          remoteReady = true;
+          queueRemoteSave();
+          return;
+        }
+
+        applyingRemoteState = true;
+        applySharedState(snapshot.data());
+        render();
+        applyingRemoteState = false;
+        remoteReady = true;
+      },
+      (error) => {
+        console.warn("NeuroCat sync listener failed", error);
+      },
+    );
+  } catch (error) {
+    console.warn("NeuroCat remote sync could not start", error);
+  }
 }
 
 function createItem(details) {
@@ -718,3 +808,4 @@ if ("serviceWorker" in navigator) {
 }
 
 render();
+initRemoteSync();

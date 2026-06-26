@@ -15,6 +15,7 @@ NeuroCat is a lightweight Progressive Web App for organizing study, shared plans
 - Home cinema backlog for movies and series with a capsule picker
 - Treat and takeout calendar
 - Shared date idea backlog with a capsule picker
+- Optional Firebase Firestore sync for two-person remote use
 - Offline-capable PWA behavior through a service worker
 
 ## Local Development
@@ -55,7 +56,33 @@ On iPhone, open the deployed site in Safari:
 2. Tap Add to Home Screen.
 3. Open NeuroCat from the Home Screen.
 
-Planner data is stored locally in the browser on the device.
+Planner data is stored locally until Firebase is configured. After Firebase is configured, the shared planner state syncs through Firestore.
+
+## Remote Sync
+
+NeuroCat can sync between two phones with Firebase Firestore.
+
+1. Create a Firebase project at `https://console.firebase.google.com/`.
+2. Add a Web app to the Firebase project.
+3. Copy the Firebase config values into `firebase-config.js`.
+4. Create a Firestore database.
+5. Publish Firestore rules for the shared NeuroCat document.
+
+Example Firestore rules for a simple shared two-person app:
+
+```text
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /neurocat/shared-planner {
+      allow read, write: if true;
+    }
+  }
+}
+```
+
+These rules make the shared planner document writable by anyone who knows the site URL. For private access, add Firebase Authentication and tighten the rules before sharing broadly.
 
 ## Adding Scenes
 

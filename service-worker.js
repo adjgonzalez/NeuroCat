@@ -1,9 +1,10 @@
-const CACHE_NAME = "neurocat-lab-planner-v28";
+const CACHE_NAME = "neurocat-lab-planner-v29";
 const FILES = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./firebase-config.js",
   "./manifest.webmanifest",
   "./icon.svg",
   "./neurocat.png",
